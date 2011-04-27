@@ -1,0 +1,11 @@
+Changes
+lib/MyFavRobot.pm
+lib/MyFavRobot/FindImg.pm
+lib/MyFavRobot/ReadTxt.pm
+Makefile.PL
+MANIFEST			This list of files
+README
+t/00-load.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
