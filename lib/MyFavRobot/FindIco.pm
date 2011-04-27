@@ -169,4 +169,4 @@ sub imager_detect_type {
 Orlovsky Alexander, C<< <nordicdyno at gmail.com> >>
 =cut
 
-1; # End of MyFavRobot::FindImg
+1; # End of MyFavRobot::FindIco

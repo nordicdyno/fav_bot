@@ -35,7 +35,22 @@ result in dir:
 
 =head2 Installation
 
-*TODO*
+check that you have required system libs:
+
+  lib-png
+  lib-jpeg
+  lib-gif
+
+install CPAN-minus
+
+  sudo cpan App::cpanminus
+
+install code to local dir:
+
+  mkdir ~/myCPAN
+  cd fav_bot
+  cpanm -n -L ~/myCPAN  .
+
 
 =head2 Usage
 
@@ -49,4 +64,22 @@ result in dir:
 
     --n-parallel     - count of forks (default=4)
 
+=head2 TODO
 
+=over 2
+
+=item * 
+
+write POD 
+
+=item * 
+
+improve tests
+
+=item * 
+
+better logging
+
+=back
+
+=cut

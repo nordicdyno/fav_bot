@@ -1,4 +1,4 @@
-#!perl -T
+#!perl 
 
 use 5.006;
 use strict;
@@ -40,7 +40,7 @@ sub module_boilerplate_ok {
 TODO: {
   local $TODO = "Need to replace the boilerplate text";
 
-  not_in_file_ok(README =>
+  not_in_file_ok('README.pod' =>
     "The README is used..."       => qr/The README is used/,
     "'version information here'"  => qr/to provide version information/,
   );
@@ -51,7 +51,7 @@ TODO: {
 
   module_boilerplate_ok('lib/MyFavRobot.pm');
   module_boilerplate_ok('lib/MyFavRobot/ReadTxt.pm');
-  module_boilerplate_ok('lib/MyFavRobot/FindImg.pm');
+  module_boilerplate_ok('lib/MyFavRobot/FindIco.pm');
 
 
 }
