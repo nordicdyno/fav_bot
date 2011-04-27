@@ -51,6 +51,9 @@ install code to local dir:
   cd fav_bot
   cpanm -n -L ~/myCPAN  .
 
+run:
+  perl -I ~/myCPAN/lib/perl5 ~/myCPAN/bin/fetch_favicons.pl
+
 
 =head2 Usage
 

@@ -12,6 +12,7 @@ WriteMakefile(
       ? ('LICENSE'=> 'perl')
       : ()),
     PL_FILES            => {},
+    EXE_FILES => ['bin/fetch_favicons.pl'],
     PREREQ_PM => {
         'Test::More'            => 0,
         'URI'                   => 0,
