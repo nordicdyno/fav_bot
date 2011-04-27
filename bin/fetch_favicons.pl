@@ -62,7 +62,7 @@ Usage:
                       (TODO : use /tmp dir by default)
     --out-dir       - dir where to store result png 16x16 files
 
-    --n-prallel     - count of forks (default=4)
+    --n-parallel     - count of forks (default=4)
 END_HELP
 }
 

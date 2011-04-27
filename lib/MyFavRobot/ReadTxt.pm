@@ -148,7 +148,6 @@ sub parse {
         push @{ $robots_cfg{ $agent_name }{$cmd} }, $check_re;
     }
 
-    #use Data::Dumper; print Dumper(\%robots_cfg),"\n";
     $self->{robots_cfg} = \%robots_cfg;
 }
 

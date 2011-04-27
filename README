@@ -1,55 +1,45 @@
-MyFavRobot
+=pod
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+fav_bot - simple command line util for fetching favicons
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+=head2 Features
 
+=item * 
 
-INSTALLATION
+Fetch favicon main page and search favicons in meta tags.
+If not found trying fetch standart /favicon.ico
 
-To install this module, run the following commands:
+=item *
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+Fetch robots.txt for favicon's domain. If favicon disallowed - skip this domain.
 
-SUPPORT AND DOCUMENTATION
+=item *
 
-After installing, you can find documentation for this module with the
-perldoc command.
+Store 16x16 .png in dir named as domain
 
-    perldoc MyFavRobot
+=head2 Quick start
 
-You can also look for information at:
+  git clone git@github.com:nordicdyno/fav_bot.git fav_bot
+  cd fav_bot
+  sh ./test/call_fetcher.sh
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=MyFavRobot
+this fetch host's favicons from file ./test/uris.txt 
+result in dir:
+  ./test/rslt
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/MyFavRobot
+=head2 Installation
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/MyFavRobot
+*TODO*
 
-    Search CPAN
-        http://search.cpan.org/dist/MyFavRobot/
+=head2 Usage
+  fetch_favicons.pl --store-dir=<store-original-images-dir>  --out-dir=<result-dir>
+                    --url-source=<file-with-grabed-domain-uris> 
+                    [ --n-parallel=N ]
+   options:
+    --store-dir     - dir where to store original favicon's images (for simple debug)
+                      (TODO : use /tmp dir by default)
+    --out-dir       - dir where to store result png 16x16 files
 
+    --n-parallel     - count of forks (default=4)
 
-LICENSE AND COPYRIGHT
-
-Copyright (C) 2011 Orlovsky Alexander
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
 

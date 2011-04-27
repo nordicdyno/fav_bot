@@ -1,8 +1,11 @@
 package MyFavRobot::Cmd;
 use strict;
 use warnings;
-
+use Parallel::ForkManager;
 use Carp;
+
+use MyFavRobot;
+use MyFavRobot::Utils;
 use base qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 __PACKAGE__->mk_accessors( qw( 
@@ -11,9 +14,6 @@ __PACKAGE__->mk_accessors( qw(
     allow_schemes 
 ) );
 
-use MyFavRobot;
-#use MyFavRobot::Utils;
-use Parallel::ForkManager;
 my $DEFAULT_PARALLEL = 1;
 
 sub run {
