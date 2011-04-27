@@ -28,7 +28,9 @@ Store 16x16 .png in dir named as domain
   sh ./test/call_fetcher.sh
 
 this fetch host's favicons from file ./test/uris.txt 
+
 result in dir:
+
   ./test/rslt
 
 =head2 Installation
