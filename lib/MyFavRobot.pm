@@ -1,7 +1,9 @@
 package MyFavRobot;
-
 use strict;
 use warnings;
+use vars qw($VERSION $DEBUG);
+#$DEBUG = 1;
+$VERSION = "0.1";
 use LWP::UserAgent;
 use File::Copy; # core
 use File::Spec;
@@ -66,15 +68,6 @@ sub new {
     $self;
 }
 
-=head2 function1
-
-=cut
-
-
-=head2 function2
-
-=cut
-
 # bot undersand unly http, file (TODO: https)
 sub check_base_uri_schema {
     my $self = shift;
@@ -87,17 +80,16 @@ sub check_base_uri_schema {
 sub found_favicon_uri {
     my $self = shift;
     my $fav_icons_hashref  = $self->get_favicons_from_index();
-    my $img_uri;
+    return unless $fav_icons_hashref;
 
-    print Dumper( $fav_icons_hashref );
+    my $img_uri;
+    #print Dumper( $fav_icons_hashref );
   IMG_TYPES_LOOP:
     for my $type ( grep { exists $fav_icons_hashref->{$_} } qw (png icon gif jpeg) )
     {
         for my $url ( @{ $fav_icons_hashref->{$type} } ) {
             $img_uri = URI->new( $url );
-            #print "found: ", $ico_url, "\n";
             last IMG_TYPES_LOOP;
-            #if ($robots.txt->)
         }
     }
 
@@ -135,8 +127,10 @@ sub process_uri {
 
     #print "base_uri -=> $base_uri\n";
     my $ico_url = $self->found_favicon_uri;
-    print "found ico: $ico_url\n" if $ico_url;
-    #return;
+    if ($DEBUG) {
+        print "found ico: $ico_url\n" if $ico_url;
+    }
+    
     if (not defined $ico_url) {
         $ico_url = '/favicon.ico';
     }
@@ -146,21 +140,21 @@ sub process_uri {
     my $robo_txt_obj = $self->get_robots_txt_obj( $ico_uri );
     if ($robo_txt_obj) {
         my $check_rel = $self->compute_rel_path( $ico_uri );
-        print "check $ico_url\n";
+        #print "check $ico_url\n";
         if ( not $robo_txt_obj->is_allow_url( $check_rel ) ) {
-            warn "'$check_rel' is disabled by robots.txt. Skip.";
+            print "[$base_uri]: '$check_rel' is disabled by robots.txt. Skip.\n";
             return;
         }
     }
 
     my $orig_copy_fname = $self->store_file( $ico_uri );
-    #exit;
+    #print "original: $orig_copy_fname\n";
     my $result_fname    = $self->gen_out_img_fname(); #$ico_uri );
-    print "result fname: $result_fname\n";
-    print qq{\$img_obj->process( $orig_copy_fname => $result_fname)}, "\n";
-    #my $img_obj  = 
-    MyFavRobot::FindIco::process( $orig_copy_fname => $result_fname);
+    #print "result fname: $result_fname\n";
+    #print qq{\$img_obj->process( $orig_copy_fname => $result_fname)}, "\n";
 
+    MyFavRobot::FindIco::process( $orig_copy_fname => $result_fname);
+    print "[$base_uri]: write result file $result_fname\n";
 }
 
 # TODO : move to init() ?
@@ -189,10 +183,7 @@ sub store_file {
     my $sub_dir = $self->_get_sub_dir_for_base_uri;
     
     my $file_name = ($uri->path_segments)[-1];
-    use Data::Dumper;
-    print Dumper( [$uri->path_segments] );
     die "not found file name in uri: $uri" unless $file_name;
-    print "file_name => $file_name\n";
     
     my $out_path_dir = File::Spec->catfile( $out_path, $sub_dir); 
     $out_path        = File::Spec->catfile( $out_path_dir, $file_name );
@@ -205,14 +196,14 @@ sub store_file {
         my $raw_src;
         # TODO: UA->mirror( $uri, $out_path)
         $self->_get_file( $uri, \$raw_src);
-        
-        if (defined $raw_src) {
-            open( my $fh, '>', $out_path ) or die "Can't open file: $out_path. '$!'";
-            binmode $fh; # на всякий случай
-            print ${fh} $raw_src    
-                or die "can't write to file $out_path. '$!'";
-        }
+        return if not defined $raw_src;
+
+        open( my $fh, '>', $out_path ) or die "Can't open file: $out_path. '$!'";
+        binmode $fh; # на всякий случай
+        print ${fh} $raw_src    
+            or die "can't write to file $out_path. '$!'";
     }
+
     return $out_path;
 }
 
@@ -226,7 +217,7 @@ sub gen_out_img_fname {
     my $file_name = 'favicon.png';
 
     my $out_path_dir = File::Spec->catfile( $out_path, $sub_dir); 
-    my $result_path        = File::Spec->catfile( $out_path_dir, $file_name );
+    my $result_path  = File::Spec->catfile( $out_path_dir, $file_name );
     make_path( $out_path_dir );
     return $result_path;
 }
@@ -234,13 +225,12 @@ sub gen_out_img_fname {
 # uri, body_ref
 sub _get_file {
     my $self = shift;
-
-    my $uri = shift; # base uri
+    my $uri      = shift; # base uri
     my $body_ref = shift;
 
     if ($uri->scheme eq 'file') {
         my $file = $uri->path;
-        #print "get $index_path\n";
+        ##print "get $index_path\n";
         eval {
             local $/ = undef;
             open (my $fh, '<', $file)
@@ -253,9 +243,18 @@ sub _get_file {
         my $ua = LWP::UserAgent->new(
             agent => $self->{bot_name} );
         $ua->timeout(3);
-        my $res = $ua->get( $uri->as_string );
+        my $url = $uri->as_string;
+        my $res = $ua->get( $url );
+        my $code = $res->code;
+        if ($DEBUG) {
+            warn "fetch: $url, code: $code";
+        }
         if ($res->is_success) {
+            #print "success: \n";
             $$body_ref = $res->content; 
+        }
+        else {
+            print STDERR "can't fetch $url. code: $code\n";
         }
         # TODO : process wrong result (die?)
     }
@@ -295,7 +294,7 @@ sub get_robots_txt_obj {
         $root_uri->path('/');
         $robots_uri = MyFavRobot::Utils::found_base_uri($root_uri, '/robots.txt');
     }
-    print "ROBOTS URI: $robots_uri\n";
+    #print "ROBOTS URI: $robots_uri\n";
 
     my $robots_body;
     $self->_get_file( $robots_uri, \$robots_body);

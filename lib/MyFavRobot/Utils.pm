@@ -49,7 +49,7 @@ sub parse_base_urls_fh {
         next unless length($_);
 
         my $url = $_;
-        print "url -> $url\n";
+        #print "url -> $url\n";
         my $u = URI->new( $url );
         unless ($u->scheme) {
             $u->scheme('http');

@@ -1,11 +1,12 @@
 package MyFavRobot::HTML::ParseHead;
-require HTML::Parser;
-@ISA = qw(HTML::Parser);
-
 use strict;
+use warnings;
+use HTML::Parser;
+use base qw(HTML::Parser);
+
 use vars qw($VERSION $DEBUG);
 #$DEBUG = 1;
-$VERSION = "3.66";
+$VERSION = "0.1";
 use MIME::Types;
 use List::MoreUtils qw(any all none notall);
 

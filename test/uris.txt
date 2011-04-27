@@ -1,4 +1,5 @@
-habr.txt
-roem.ru
+#habr.txt
 habrahabr.ru
-blogger.com
+yandex.ru
+www.apple.com
+microsoft.com

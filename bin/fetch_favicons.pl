@@ -7,8 +7,10 @@ use Getopt::Long;
 use MyFavRobot::Cmd;
 use MyFavRobot::Utils;
 
+my $n_parallel = 4;
 my %opt;
 GetOptions( \%opt, 
+    "n-parallel|n=s",
     "store-dir=s", "out-dir=s", "--url-source=s", "help",
     ) or (print_help() && die "Get options error");
 
@@ -25,6 +27,9 @@ if (@not_found_params) {
     exit 1;
 }
 
+if( exists $opt{'n-parallel'} && ($opt{'n-parallel'} =~ m/^(\d+)$/) ) {
+    $n_parallel = int($1);
+}
 my $url_file = $opt{'url-source'};
 die "can't find urls file: $url_file" unless -f $url_file;
 
@@ -37,11 +42,10 @@ my $cmd = MyFavRobot::Cmd->new({
         img_origin_store_dir   => $opt{'store-dir'},
         img_result_store_dir   => $opt{'out-dir'},
     });
-exit;
 
 $cmd->run(
     uris     => \@uris,
-    parallel => 2,
+    parallel => $n_parallel,
 );
 exit;
 =pod
@@ -52,7 +56,13 @@ sub print_help {
 Usage: 
   fetch_favicons.pl --store-dir=<store-original-images-dir>  --out-dir=<result-dir>
                     --url-source=<file-with-grabed-domain-uris> 
+                    [ --n-parallel=N ]
+   options:
+    --store-dir     - dir where to store original favicon's images (for simple debug)
+                      (TODO : use /tmp dir by default)
+    --out-dir       - dir where to store result png 16x16 files
 
+    --n-prallel     - count of forks (default=4)
 END_HELP
 }
 

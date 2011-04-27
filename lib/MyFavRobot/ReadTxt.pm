@@ -3,6 +3,10 @@ package MyFavRobot::ReadTxt;
 use 5.006;
 use strict;
 use warnings;
+use vars qw($VERSION $DEBUG);
+#$DEBUG = 1;
+$VERSION = "0.1";
+
 use List::MoreUtils qw(any all none notall);
 
 =head1 NAME
@@ -73,24 +77,21 @@ sub parse {
         # TODO: add support ref to scalar
     }
     unless (length $data) {
-        #$self->{allow_all} = 1;
         return;
     }
-    #print "parse:\n", $data, "\n";
-    #return;
     my ($agent_name, %robots_cfg);
     open(my $fh, '<', \$data) or die "can't open robots data: $!";
     my $n = 0;
     while (my $line = <$fh>) {
         $n++;
-        #print "PARSE $line";
-        #chomp $line; 
         $line =~ s/^\s+//g; $line =~ s/s+$//g;
         next unless length $line;
         next if $line =~ /^#/; # support comments
         
         unless ( $line =~ /^([a-zA-Z-]+)\s*:\s*(\S*)/ ) {
-            warn "[line: $n] Wrong string format for robots.txt: '$line'. Skip.";
+            if ($DEBUG) {
+                warn "[line: $n] Wrong string format for robots.txt: '$line'. Skip.";
+            }
             next;
         }
 
@@ -101,7 +102,9 @@ sub parse {
             next; # silently skip 'Host' instruction (not support yet)
         }
         elsif ( all {$cmd ne $_} qw (user-agent disallow allow) ) {
-            warn "[line: $n] Wrong string format for robots.txt: '$line'. Skip.";
+            if ($DEBUG) {
+                warn "[line: $n] Wrong string format for robots.txt: '$line'. Skip.";
+            }
             next;
         }
         #print "$line\n";
@@ -244,59 +247,6 @@ sub is_allow_url {
 =head1 AUTHOR
 
 Orlovsky Alexander, C<< <nordicdyno at gmail.com> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-myfavrobot at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MyFavRobot>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc MyFavRobot::ReadTxt
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MyFavRobot>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/MyFavRobot>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/MyFavRobot>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/MyFavRobot/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2011 Orlovsky Alexander.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
 
 =cut
 

@@ -52,7 +52,7 @@ sub process {
 CONTROL_LOOP:
     for ('CONTROL') {
         last if not defined $in_file;
-        print "process file $in_file\n";
+        # print "process file $in_file\n";
 # TODO: use more portable extension and name check
         unless ($in_file =~ m{([^/]+)\.([^.]+)$}) {
             warn "not matched $in_file (required name.extension format)\n";
@@ -87,7 +87,7 @@ sub find_best_image {
 
     my $img_found;
     my $prefer_ratio = $prefer_w / $prefer_h;
-    print "process image: $file\n";
+    #print "process image: $file\n";
     my @imgs = Imager->read_multi( file => $file )
             or die "Cannot read: ", Imager->errstr;
     return unless @imgs;
@@ -98,20 +98,17 @@ sub find_best_image {
         $img_found = $imgs[0];
     }
     else {
-        # if other formats found better size
-        #my $ i = 0;
         my @check_imgs;
        IMGS_LOOP:
         for (my $i =0; $i < @imgs; $i++) {
             my $img = $imgs[ $i ];
-            #$i++;
             my ($w, $h) = ($img->getwidth(), $img->getheight() );
             if ($w == $prefer_w && $h == $prefer_h) {
                 $img_found = $img;
                 last IMGS_LOOP;
             }
 
-            print "width => $w, height => $h\n";
+            #print "width => $w, height => $h\n";
             next IMGS_LOOP if ($w == 0 or $h == 0);
             my $ratio = $w / $h;
             # пропускаем все неквадартные картинки (для упрощения логики)
@@ -170,60 +167,6 @@ sub imager_detect_type {
 =head1 AUTHOR
 
 Orlovsky Alexander, C<< <nordicdyno at gmail.com> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-myfavrobot at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MyFavRobot>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc MyFavRobot::FindImg
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MyFavRobot>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/MyFavRobot>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/MyFavRobot>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/MyFavRobot/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2011 Orlovsky Alexander.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
-
 =cut
 
 1; # End of MyFavRobot::FindImg
