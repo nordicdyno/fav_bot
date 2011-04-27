@@ -4,6 +4,8 @@ fav_bot - simple command line util for fetching favicons
 
 =head2 Features
 
+=over 2
+
 =item * 
 
 Fetch favicon main page and search favicons in meta tags.
@@ -16,6 +18,8 @@ Fetch robots.txt for favicon's domain. If favicon disallowed - skip this domain.
 =item *
 
 Store 16x16 .png in dir named as domain
+
+=back
 
 =head2 Quick start
 
@@ -32,6 +36,7 @@ result in dir:
 *TODO*
 
 =head2 Usage
+
   fetch_favicons.pl --store-dir=<store-original-images-dir>  --out-dir=<result-dir>
                     --url-source=<file-with-grabed-domain-uris> 
                     [ --n-parallel=N ]
